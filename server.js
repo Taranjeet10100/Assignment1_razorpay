@@ -2,16 +2,23 @@ const express = require("express");
 const app = express();
 const Razorpay = require("razorpay");
 const bodyParser = require('body-parser')
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+var options = {
+    explorer: true
+  };
 
 let instance = new Razorpay({
     key_id: 'rzp_test_d3fIdfEXIFhpGY', // your `KEY_ID`
     key_secret: 'gd2JEZV6IywEDS4acns57Vpv' // your `KEY_SECRET`
 })
 
-
+// app.use(express.static(pathToSwaggerUi));
 app.use('/web', express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 
 app.post("/api/payment/order", async (req, res) => {
